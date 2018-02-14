@@ -27,6 +27,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.wgt.locationtraveller.adapter.PagerAdapter;
@@ -59,7 +61,9 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
 
         handler = new Handler();
 
-        getSupportActionBar().setTitle("KGP,100,14:26");
+        getSupportActionBar().setTitle("KHARAGPUR, 100 KM, 02:26 PM");
+        getSupportActionBar().hide();
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // initialize permissions
         listOfPermissions = new ArrayList<>();
