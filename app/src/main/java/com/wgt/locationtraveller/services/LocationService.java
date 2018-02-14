@@ -1,4 +1,4 @@
-package com.wgt.mapintegration.services;
+package com.wgt.locationtraveller.services;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -22,13 +22,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.wgt.mapintegration.R;
-import com.wgt.mapintegration.activity.MainActivity;
-import com.wgt.mapintegration.database.AppDatabase;
-import com.wgt.mapintegration.model.LocationModel;
-import com.wgt.mapintegration.model.UserModel;
-import com.wgt.mapintegration.preference.UserPreference;
-import com.wgt.mapintegration.utils.Constant;
+import com.wgt.locationtraveller.R;
+import com.wgt.locationtraveller.activity.MainActivity;
+import com.wgt.locationtraveller.database.AppDatabase;
+import com.wgt.locationtraveller.model.LocationModel;
+import com.wgt.locationtraveller.utils.Constant;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,15 +37,13 @@ public class LocationService extends Service
         LocationListener {
 
     private IBinder iBinder = new MyBinder();
+    private LocationListener listener;
 
     private GoogleApiClient gac;
     private LocationRequest locationRequest;
 
-    private final String TAG = "GPS";
-    private final long UPDATE_INTERVAL = 1000*60*2;
-    private final long FASTEST_INTERVAL = 1000*60*2;
-
-    private Location loc;
+    private final long UPDATE_INTERVAL = 2000;//1000*60*2;
+    private final long FASTEST_INTERVAL = 2000;//1000*60*2;
 
     @Override
     public void onCreate() {
@@ -123,28 +119,22 @@ public class LocationService extends Service
 
     @Override
     public void onLocationChanged(Location location) {
-        loc = location;
-        Intent locationIntent = new Intent(Constant.INTENT.INTENT_LOCATION_BROADCAST);
-        locationIntent.putExtra(Constant.INTENT.INTENT_LOCATION_LAT, location.getLatitude());
-        locationIntent.putExtra(Constant.INTENT.INTENT_LOCATION_LONG, location.getLongitude());
-        LocalBroadcastManager.getInstance(this).sendBroadcast(locationIntent);
+        // send location to listener (Activity)
+        if (listener != null) {
+            listener.onLocationReceived(location);
+        }
 
+        //save location to database
         saveToDatabase(location);
     }
 
     private void saveToDatabase(Location location) {
-        Calendar calendar = Calendar.getInstance();
         AppDatabase database = AppDatabase.getDatabase(this);
-        UserPreference preference = new UserPreference(this);
         String dateTime = getDateAndTime();
-        UserModel model = preference.getUser();
-        if (model == null) {
-            return;
-        }
+
         long n = database.locationDao()
                 .addLocation(
                         new LocationModel(
-                                model.getEmail(),
                                 dateTime.split(" ")[0],
                                 dateTime.split(" ")[1],
                                 location.getLatitude(),
@@ -178,9 +168,10 @@ public class LocationService extends Service
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingNotificationIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-        Intent stopIntent = new Intent(this, LocationService.class);
+        //stop intent
+        /*Intent stopIntent = new Intent(this, LocationService.class);
         stopIntent.setAction(Constant.ACTION.ACTION_STOP_LOCATION_SERVICE);
-        PendingIntent pendingStopIntent = PendingIntent.getService(this, 0, stopIntent, 0);
+        PendingIntent pendingStopIntent = PendingIntent.getService(this, 0, stopIntent, 0);*/
 
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 
@@ -191,7 +182,7 @@ public class LocationService extends Service
                 .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                 .setContentIntent(pendingNotificationIntent)
                 .setOngoing(true)
-                .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Stop", pendingStopIntent)
+                //.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Stop", pendingStopIntent)
                 .build();
 
         startForeground(Constant.NOTIFICATION_ID.LOCATION_SERVICE_NOTIFICATION_ID, notification);
@@ -202,14 +193,18 @@ public class LocationService extends Service
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    public Location getLocation() {
-        return loc;
-    }
-
     //binder class
     public class MyBinder extends Binder {
         public LocationService getServiec() {
             return LocationService.this;
         }
+    }
+
+    // location listener interface
+    public interface LocationListener {
+        void onLocationReceived(Location location);
+    }
+    public void setLocationListener(LocationListener listener) {
+        this.listener = listener;
     }
 }

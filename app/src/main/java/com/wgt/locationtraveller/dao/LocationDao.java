@@ -1,10 +1,10 @@
-package com.wgt.mapintegration.dao;
+package com.wgt.locationtraveller.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-import com.wgt.mapintegration.model.LocationModel;
+import com.wgt.locationtraveller.model.LocationModel;
 
 import java.util.List;
 
@@ -20,6 +20,6 @@ public interface LocationDao {
     @Query("SELECT * FROM LocationModel")
     List<LocationModel> getAllLocations();
 
-    @Query("SELECT * FROM LocationModel WHERE email = :email")
-    List<LocationModel> getAllLocationsByEmail(String email);
+    /*@Query("SELECT * FROM LocationModel WHERE email = :email")
+    List<LocationModel> getAllLocationsByEmail(String email);*/
 }

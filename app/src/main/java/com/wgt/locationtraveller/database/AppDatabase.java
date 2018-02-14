@@ -1,16 +1,14 @@
-package com.wgt.mapintegration.database;
+package com.wgt.locationtraveller.database;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import com.wgt.mapintegration.dao.LocationDao;
-import com.wgt.mapintegration.dao.UserDao;
-import com.wgt.mapintegration.model.LocationModel;
-import com.wgt.mapintegration.model.UserModel;
+import com.wgt.locationtraveller.dao.LocationDao;
+import com.wgt.locationtraveller.model.LocationModel;
 
-@Database(entities = {LocationModel.class, UserModel.class}, version = 1, exportSchema = false)
+@Database(entities = {LocationModel.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
 
@@ -33,7 +31,6 @@ public abstract class AppDatabase extends RoomDatabase {
         INSTANCE = null;
     }
 
-    public abstract UserDao userDao();
     public abstract LocationDao locationDao();
 
 
