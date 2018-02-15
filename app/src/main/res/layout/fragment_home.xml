@@ -52,7 +52,7 @@
                 android:layout_below="@id/tv_current_city"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="DELAY TIME"
+                android:text="LATE => 00:32"
                 android:textColor="@android:color/white"
                 android:textSize="40sp" />
 
@@ -68,18 +68,7 @@
                 android:textStyle="bold"
                 android:visibility="visible"/>
 
-            <TextView
-                android:id="@+id/tv_pending_distance"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/tv_lat_lon_data"
-                android:layout_marginTop="499dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="990 KM, 03:33 PM"
-                android:textColor="@android:color/white"
-                android:textSize="35sp" />
+
 
         </RelativeLayout>
 
@@ -90,10 +79,10 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/milestone">
+            android:background="@drawable/milestone"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp">
 
             <TextView
                 android:id="@+id/tv_exp_time_data"
@@ -140,25 +129,37 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:layout_gravity="center"
             android:background="@drawable/board"
+            android:orientation="vertical"
             android:padding="10dp">
 
             <me.grantland.widget.AutofitTextView
                 android:id="@+id/tv_final_dest_data"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
                 android:layout_centerHorizontal="true"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="ROURKELA"
                 android:textColor="@android:color/white"
                 android:textSize="50sp"
                 autofit:minTextSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tv_pending_distance"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_below="@id/tv_final_dest_data"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="990 KM, 03:33 PM"
+                android:textColor="@android:color/white"
+                android:textSize="35sp" />
 
             <!--<TextView
                 android:id="@+id/tv_final_exp_time"
