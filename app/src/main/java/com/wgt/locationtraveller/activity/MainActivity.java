@@ -21,6 +21,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
@@ -34,6 +35,8 @@ import android.widget.Toast;
 import com.wgt.locationtraveller.adapter.PagerAdapter;
 
 import com.wgt.locationtraveller.R;
+import com.wgt.locationtraveller.fragment.HomeFragment;
+import com.wgt.locationtraveller.fragment.MessageFragment;
 import com.wgt.locationtraveller.services.LocationService;
 import com.wgt.locationtraveller.utils.Constant;
 
@@ -53,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
 
     private List<String> listOfPermissions;
     private final int PERMISSION_REQUEST_CODE = 1;
+
+    private List<Fragment> fragList;
+    private LocationService.LocationListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +83,16 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+        //2nd logic of fragments
+        fragList = new ArrayList<>();
+        fragList.add(new HomeFragment());
+        fragList.add(new MessageFragment());
+
+        //set frag listener
+        listener = (LocationService.LocationListener)fragList.get(0);
+
         //adapter
-        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), fragList);
 
         //view pager
         final ViewPager viewPager = findViewById(R.id.view_pager);
@@ -184,21 +198,9 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     //location callback from service
     @Override
     public void onLocationReceived(Location location) {
-        //TODO :set location to home fragment
-        String _Location = null;
-
-        Toast.makeText(this, "LAT : " + location.getLatitude() + " LON : " + location.getLongitude(), Toast.LENGTH_SHORT).show();
-        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-        try {
-            List<Address> listAddresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            if(null!=listAddresses&&listAddresses.size()>0){
-                _Location = listAddresses.get(0).getAddressLine(0);
-                String a = "";
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (listener != null) {
+            listener.onLocationReceived(location);
         }
-
     }
 
     //==========================================dev defined functions=======================================
