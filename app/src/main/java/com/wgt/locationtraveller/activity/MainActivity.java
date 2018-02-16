@@ -37,6 +37,7 @@ import com.wgt.locationtraveller.adapter.PagerAdapter;
 import com.wgt.locationtraveller.R;
 import com.wgt.locationtraveller.fragment.HomeFragment;
 import com.wgt.locationtraveller.fragment.MessageFragment;
+import com.wgt.locationtraveller.fragment.SettingsFragment;
 import com.wgt.locationtraveller.services.LocationService;
 import com.wgt.locationtraveller.utils.Constant;
 
@@ -80,13 +81,15 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_home));
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_msg));
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_settings));
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //2nd logic of fragments
         fragList = new ArrayList<>();
         fragList.add(new HomeFragment());
         fragList.add(new MessageFragment());
+        fragList.add(new SettingsFragment());
 
         //set frag listener
         listener = (LocationService.LocationListener)fragList.get(0);

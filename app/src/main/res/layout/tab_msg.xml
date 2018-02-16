@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary">
     <ImageView
+        android:id="@+id/img"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@drawable/ic_msg"
@@ -14,7 +15,8 @@
         android:text="MESSAGE"
         android:textSize="20sp"
         android:textColor="@android:color/white"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/img"
+        android:layout_marginLeft="5dp"/>
 
 </RelativeLayout>

@@ -22,4 +22,8 @@ public class Constant {
 
         String INTENT_LOCATION_SERVICE_STOPPED = "com.wgt.mapintegration.intent.location.stopped";
     }
+
+    public interface URL {
+        String train_info = "https://kaiserwgt.000webhostapp.com/webservices/getRouteInfo.php";
+    }
 }

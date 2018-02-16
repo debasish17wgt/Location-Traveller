@@ -13,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wgt.locationtraveller.R;
+import com.wgt.locationtraveller.file.TrainInfoHandler;
+import com.wgt.locationtraveller.model.RouteModel;
+import com.wgt.locationtraveller.model.TrainInfoModel;
 import com.wgt.locationtraveller.services.LocationService;
 
 import java.io.IOException;
@@ -39,6 +42,26 @@ public class HomeFragment extends Fragment implements LocationService.LocationLi
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        updateUI();
+    }
+
+    public void updateUI() {
+        //TODO: refresh the ui every time user navigate to this fragment
+        TrainInfoModel trainInfoModel = new TrainInfoHandler(getContext()).getTrainDetails();
+        if (trainInfoModel == null) {
+            Toast.makeText(getContext(), "ERROR : failed to refresh UI\nREASON : train info not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        RouteModel routeModel = trainInfoModel.getRouteList().get(trainInfoModel.getRouteList().size()-1);
+        tv_final_dest_data.setText(routeModel.getStationName());
+        tv_pending_distance.setText(routeModel.getDistanceCovered()+"KM, "+convertTime(routeModel.getArrivalTime()));
+    }
+
+
+
     //==========================================dev's defined methods=================================
     private void initUIComponents(View view) {
         tv_current_loc = view.findViewById(R.id.tv_current_location_data);
@@ -52,6 +75,17 @@ public class HomeFragment extends Fragment implements LocationService.LocationLi
         tv_pending_distance = view.findViewById(R.id.tv_pending_distance);
        // tv_final_exp_time = view.findViewById(R.id.tv_final_exp_time);
 
+    }
+
+    private String convertTime(String arrivalTime) {
+        String ampm = "AM";
+        String[] temp = arrivalTime.split(":");
+        int hr = Integer.parseInt(temp[0]);
+        if (hr > 12) {
+            hr = hr-12;
+            ampm = "PM";
+        }
+        return hr+":"+temp[1]+ampm;
     }
 
     @Override
