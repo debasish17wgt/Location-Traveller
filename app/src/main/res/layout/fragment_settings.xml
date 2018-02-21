@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,224 +7,173 @@
     android:orientation="vertical"
     tools:context="com.wgt.locationtraveller.fragment.SettingsFragment">
 
-<!--
-    <View
-        android:id="@+id/view"
-        android:layout_width="2dp"
-        android:layout_height="300dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="190dp"
-        android:layout_marginTop="30dp"
-        android:background="@color/colorAccent"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
-
     <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="wrap_content"
+        android:id="@+id/layout_input"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/card_background"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/layout_interval"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="@string/interval"
-            android:textColor="@android:color/white"
-            android:textSize="27sp"
-            android:textStyle="bold" />
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="2"
+            android:background="@drawable/card_background"
+            android:minHeight="300dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <RadioGroup
-            android:id="@+id/rg_time_imterval"
-            android:layout_width="146dp"
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="@string/interval"
+                android:textColor="@android:color/white"
+                android:textSize="27sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/rg_time_imterval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="10dp">
+
+                <RadioButton
+                    android:id="@+id/rd_five_sec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:buttonTint="@android:color/white"
+                    android:text="05 sec"
+                    android:textColor="@android:color/white"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rd_thirty_sec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@android:color/white"
+                    android:text="30 sec"
+                    android:textColor="@android:color/white"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rd_two_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:buttonTint="@android:color/white"
+                    android:text="02 min"
+                    android:textColor="@android:color/white"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rd_five_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:buttonTint="@android:color/white"
+                    android:text="05 min"
+                    android:textColor="@android:color/white"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rd_fifteen_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:buttonTint="@android:color/white"
+                    android:text="15 min"
+                    android:textColor="@android:color/white"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rd_thirty_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="7dp"
+                    android:buttonTint="@android:color/white"
+                    android:text="30 min"
+                    android:textColor="@android:color/white"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/layout_train_no"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="2"
+            android:background="@drawable/card_background"
+            android:minHeight="300dp"
+            android:orientation="vertical"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <RadioButton
-                android:id="@+id/rd_five_sec"
+            <TextView
+                android:id="@+id/textVie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:buttonTint="@android:color/white"
-                android:text="05 sec"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="@string/train_no"
                 android:textColor="@android:color/white"
-                android:textSize="23sp"
+                android:textSize="27sp"
                 android:textStyle="bold" />
 
-            <RadioButton
-                android:id="@+id/rd_thirty_sec"
-                android:layout_width="wrap_content"
+            <RadioGroup
+                android:id="@+id/rg_train_no"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:buttonTint="@android:color/white"
-                android:text="30 sec"
-                android:textColor="@android:color/white"
-                android:textSize="23sp"
-                android:textStyle="bold" />
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="10dp" />
 
-            <RadioButton
-                android:id="@+id/rd_two_min"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:buttonTint="@android:color/white"
-                android:text="02 min"
-                android:textColor="@android:color/white"
-                android:textSize="23sp"
-                android:textStyle="bold" />
 
-            <RadioButton
-                android:id="@+id/rd_five_min"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:buttonTint="@android:color/white"
-                android:text="05 min"
-                android:textColor="@android:color/white"
-                android:textSize="23sp"
-                android:textStyle="bold" />
-
-            <RadioButton
-                android:id="@+id/rd_fifteen_min"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:buttonTint="@android:color/white"
-                android:text="15 min"
-                android:textColor="@android:color/white"
-                android:textSize="23sp"
-                android:textStyle="bold" />
-
-            <RadioButton
-                android:id="@+id/rd_thirty_min"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="7dp"
-                android:buttonTint="@android:color/white"
-                android:text="30 min"
-                android:textColor="@android:color/white"
-                android:textSize="23sp"
-                android:textStyle="bold" />
-        </RadioGroup>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayou"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/card_background"
-        android:orientation="vertical"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/textVie"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="@string/train_no"
-            android:textColor="@android:color/white"
-            android:textSize="27sp"
-            android:textStyle="bold" />
-
-        <RadioGroup
-            android:id="@+id/rg_train_no"
-            android:layout_width="146dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp">
-
-            <RadioButton
-                android:id="@+id/rd_train_one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@android:color/white"
-                android:text="12872"
-                android:textColor="@android:color/white"
-                android:textSize="23sp"
-                android:textStyle="bold" />
-
-            <RadioButton
-                android:id="@+id/rd_train_two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:buttonTint="@android:color/white"
-                android:text="53647"
-                android:textColor="@android:color/white"
-                android:textSize="23sp"
-                android:textStyle="bold" />
-
-            <RadioButton
-                android:id="@+id/rd_train_three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="7dp"
-                android:buttonTint="@android:color/white"
-                android:text="65759"
-                android:textColor="@android:color/white"
-                android:textSize="23sp"
-                android:textStyle="bold" />
-
-            <RadioButton
-                android:id="@+id/rd_train_four"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:buttonTint="@android:color/white"
-                android:text="65812"
-                android:textColor="@android:color/white"
-                android:textSize="23sp"
-                android:textStyle="bold" />
-
-            <RadioButton
-                android:id="@+id/rd_train_five"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:buttonTint="@android:color/white"
-                android:text="98564"
-                android:textSize="23sp"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-            <RadioButton
-                android:id="@+id/rd_train_six"
-                android:layout_width="wrap_content"
-                android:textColor="@android:color/white"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="7dp"
-                android:buttonTint="@android:color/white"
-                android:text="58647"
-                android:textSize="23sp"
-                android:textStyle="bold" />
-        </RadioGroup>
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_train_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:layout_below="@id/layout_input"
+        android:layout_marginBottom="132dp"
         android:text="Train Name"
-        android:textSize="50sp"
         android:textColor="@android:color/black"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_marginRight="30dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_fab_add"
+        app:fabSize="normal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:minWidth="300dp"
+    android:minHeight="100dp"
+    android:layout_height="wrap_content"
+    android:background="@color/darkGreen">
+
+    <EditText
+        android:id="@+id/et_train_no"
+        android:inputType="numberDecimal"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/white"
+        android:hint="Enter Train NO."
+        android:gravity="center"
+
+        android:maxLength="5"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_train_no"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <Spinner
+            android:id="@+id/spnr_source"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/white"/>
+        <TextView
+            android:id="@+id/tv_to"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="TO"
+            android:textSize="20sp"
+            android:layout_margin="5dp"
+            android:textColor="@android:color/white"
+            android:layout_below="@id/spnr_source"/>
+
+        <Spinner
+            android:id="@+id/spnr_destination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_to"
+            android:backgroundTint="@android:color/white"/>
+
+        <ImageView
+            android:id="@+id/img_add_train"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/spnr_destination"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_done"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/img_add_train"
+            android:layout_marginRight="10dp"
+            android:layout_below="@id/spnr_destination"
+            android:text="Clear"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:background="@color/colorPrimary"
+            android:textSize="20sp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

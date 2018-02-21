@@ -6,9 +6,13 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.wgt.locationtraveller.dao.LocationDao;
+import com.wgt.locationtraveller.dao.RouteDao;
+import com.wgt.locationtraveller.dao.TrainInfoDao;
 import com.wgt.locationtraveller.model.LocationModel;
+import com.wgt.locationtraveller.model.RouteModel;
+import com.wgt.locationtraveller.model.TrainInfoModel;
 
-@Database(entities = {LocationModel.class}, version = 1, exportSchema = false)
+@Database(entities = {LocationModel.class, TrainInfoModel.class, RouteModel.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
 
@@ -32,6 +36,6 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract LocationDao locationDao();
-
-
+    public abstract TrainInfoDao trainInfoDao();
+    public abstract RouteDao routeDao();
 }
