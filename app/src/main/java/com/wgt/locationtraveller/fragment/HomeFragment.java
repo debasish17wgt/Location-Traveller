@@ -1,5 +1,6 @@
 package com.wgt.locationtraveller.fragment;
 
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -16,7 +17,9 @@ import android.widget.TextView;
 import com.wgt.locationtraveller.R;
 import com.wgt.locationtraveller.database.AppDatabase;
 import com.wgt.locationtraveller.model.RouteModel;
+import com.wgt.locationtraveller.model.StatusModel;
 import com.wgt.locationtraveller.model.TrainInfoModel;
+import com.wgt.locationtraveller.preference.StatusPref;
 import com.wgt.locationtraveller.preference.TrainPref;
 import com.wgt.locationtraveller.services.LocationService;
 
@@ -24,19 +27,38 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class HomeFragment extends Fragment implements LocationService.LocationListener {
+public class HomeFragment extends Fragment implements LocationService.LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private TextView tv_current_loc, tv_current_city, tv_delay, tv_lat_lon,
             tv_next_station_exp_time, tv_next_station, tv_next_station_dist,
             tv_final_dest_data, tv_pending_distance;//, tv_final_exp_time;
 
     private Handler handler;
+    private StatusPref statusPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handler = new Handler();
         setRetainInstance(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null) {
+            statusPref = new StatusPref(getActivity());
+            statusPref.registerListener(this);
+            StatusModel model = statusPref.getStatus();
+            updateUI(model);
+        }
+
+    }
+
+    //TODO : update the whole UI with available data
+    private void updateUI(StatusModel model) {
+        if (model == null) return;
+
     }
 
     @Override
@@ -88,6 +110,31 @@ public class HomeFragment extends Fragment implements LocationService.LocationLi
 
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        switch (key) {
+            case StatusPref.PREF_STATUS_DELAY:
+                tv_delay.setText(sharedPreferences.getString(key, tv_delay.getText().toString()));
+                break;
+            case StatusPref.PREF_STATUS_NXT_ST:
+                tv_next_station.setText(sharedPreferences.getString(key, tv_next_station.getText().toString()));
+                break;
+            case StatusPref.PREF_STATUS_NXT_EXP_TIME:
+                tv_next_station_exp_time.setText(sharedPreferences.getString(key, tv_next_station_exp_time.getText().toString()));
+                break;
+            case StatusPref.PREF_STATUS_DEST_EXP_TIME:
+                String tTime = tv_pending_distance.getText().toString();
+                String dist = tTime.split(",")[0];
+
+                String tempTime = sharedPreferences.getString(key, null);
+                if (tempTime != null) {
+                    tv_pending_distance.setText(dist+", "+convertTime(tempTime));
+                }
+                break;
+
+        }
+    }
+
     //==========================================dev's defined methods=================================
     private void initUIComponents(View view) {
         tv_current_loc = view.findViewById(R.id.tv_current_location_data);
@@ -125,23 +172,25 @@ public class HomeFragment extends Fragment implements LocationService.LocationLi
         tv_final_dest_data.setText(routeModel.getStationName());
         tv_pending_distance.setText(routeModel.getDistanceCovered() + "KM, " + convertTime(routeModel.getArrivalTime()));*/
 
-       int trainNo = new TrainPref(getContext()).getTrainNumber();
-       if (trainNo == 0) {
-           return;
-       }
+        int trainNo = new TrainPref(getContext()).getTrainNumber();
+        if (trainNo == 0) {
+            return;
+        }
         TrainInfoModel train = AppDatabase.getDatabase(getContext()).trainInfoDao().getTrainByTrainNO(trainNo);
         List<RouteModel> routes = AppDatabase.getDatabase(getContext()).routeDao().getRouteByTrainNo(trainNo);
         RouteModel dest = null;
-        if (routes != null && routes.size() >=1) {
-            dest = routes.get(routes.size()-1);
+        if (routes != null && routes.size() >= 1) {
+            dest = routes.get(routes.size() - 1);
         }
-       if (train != null) {
-           tv_final_dest_data.setText(train.getDestination());
-       }
-       if (dest != null) {
-           tv_pending_distance.setText(dest.getDistanceCovered()+" KM, "+convertTime(dest.getArrivalTime()));
-       }
+        if (train != null) {
+            tv_final_dest_data.setText(train.getDestination());
+        }
+        if (dest != null) {
+            tv_pending_distance.setText(dest.getDistanceCovered() + " KM, " + convertTime(dest.getArrivalTime()));
+        }
     }
+
+
 
     //latLng to address converter AsyncTask
     private class LatLngToAddressAsync extends AsyncTask<Void, Void, List<Address>> {
