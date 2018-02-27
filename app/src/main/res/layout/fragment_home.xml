@@ -19,7 +19,10 @@
             android:layout_height="200dp"
             android:layout_gravity="center"
             android:background="@drawable/board"
-            android:padding="10dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
             <me.grantland.widget.AutofitTextView
                 android:id="@+id/tv_current_location_data"
@@ -40,21 +43,46 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="CITY"
+                android:textStyle="bold"
                 android:textColor="@android:color/white"
                 android:textSize="40sp"
                 autofit:minTextSize="16sp"/>
 
-            <TextView
-                android:id="@+id/tv_late_data"
+
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/tv_lat_lon_data"
                 android:layout_below="@id/tv_current_city"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="LATE => 00:32"
-                android:textColor="@android:color/white"
-                android:textSize="40sp" />
+                android:layout_centerHorizontal="true">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="40sp"
+                    android:text="LATE -"
+                    android:gravity="right"/>
+
+                <TextView
+                    android:id="@+id/tv_late_data"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="00:00"
+                    android:gravity="right"
+                    android:textColor="@android:color/white"
+                    android:textSize="40sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" hrs"
+                    android:textColor="@android:color/white"
+                    android:textSize="30sp"/>
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/tv_lat_lon_data"
@@ -86,11 +114,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:text="03:12"
+                android:layout_marginTop="20dp"
+                android:text="00:00"
                 android:textColor="@android:color/white"
                 android:textSize="60sp"
                 android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_next_ampm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AM"
+                android:textColor="@android:color/white"
+                android:layout_below="@id/tv_exp_time_data"
+                android:layout_centerHorizontal="true"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
             <me.grantland.widget.AutofitTextView
                 android:id="@+id/tv_next_station_data"
@@ -103,7 +141,7 @@
                 android:layout_marginTop="130dp"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="TATA"
+                android:text="NXT ST"
                 android:textColor="@android:color/black"
                 android:textSize="60sp"
                 android:textStyle="bold"
@@ -117,7 +155,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="17 K.M."
+                android:text="00 K.M."
                 android:textColor="@android:color/black"
                 android:textSize="60sp"
                 android:textStyle="bold" />
@@ -139,7 +177,7 @@
                 android:layout_weight="2"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="ROURKELA"
+                android:text="DESTINATION"
                 android:textColor="@android:color/white"
                 android:textSize="50sp"
                 autofit:minTextSize="16sp"/>
@@ -152,7 +190,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="990 KM, 03:33 PM"
+                android:text="000 KM, 00:00PM"
                 android:textColor="@android:color/white"
                 android:textSize="35sp" />
 

@@ -16,12 +16,14 @@ public class StatusPref {
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     public static final String PREF_STATUS_FILE = "status_details";
+    public static final String PREF_STATUS_LOC = "location";
     public static final String PREF_STATUS_LAT = "lat";
     public static final String PREF_STATUS_LNG = "lng";
     public static final String PREF_STATUS_DELAY = "delay";
 
     public static final String PREF_STATUS_NXT_ST = "next_station";
     public static final String PREF_STATUS_NXT_EXP_TIME = "nxt_exp_time";
+    public static final String PREF_STATUS_NXT_EXP_AMPM = "nxt_ampm";
     public static final String PREF_STATUS_NXT_DIST = "nxt_dist";
 
     public static final String PREF_STATUS_DEST_ST = "dest_station";
@@ -35,6 +37,7 @@ public class StatusPref {
 
     public StatusModel getStatus() {
         return new StatusModel(
+                sharedPreferences.getString(PREF_STATUS_LOC, null),
                 sharedPreferences.getString(PREF_STATUS_LAT, null),
                 sharedPreferences.getString(PREF_STATUS_LNG, null),
 
@@ -53,6 +56,7 @@ public class StatusPref {
     public void saveStatus(StatusModel status) {
         editor = sharedPreferences.edit();
 
+        if (status.getCurrent_city() != null && !status.getCurrent_city().equals("")) editor.putString(PREF_STATUS_LOC, status.getCurrent_city());
         if (status.getCurrent_lat() != null && !status.getCurrent_lat().equals("")) editor.putString(PREF_STATUS_LAT, status.getCurrent_lat());
         if (status.getCurrent_lng() != null && !status.getCurrent_lng().equals("")) editor.putString(PREF_STATUS_LNG, status.getCurrent_lng());
 
@@ -77,5 +81,14 @@ public class StatusPref {
     public void registerListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
         this.listener = listener;
         getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
+    }
+    public void unregisterListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        this.listener = listener;
+        getSharedPreferences().unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+
+    public interface SharedPrefChangedListener {
+        void onSharedPrefChanged(SharedPreferences sharedPreferences, String key);
     }
 }

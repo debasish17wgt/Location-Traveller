@@ -27,14 +27,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class HomeFragment extends Fragment implements LocationService.LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class HomeFragment extends Fragment implements LocationService.LocationListener,
+        StatusPref.SharedPrefChangedListener {
 
     private TextView tv_current_loc, tv_current_city, tv_delay, tv_lat_lon,
-            tv_next_station_exp_time, tv_next_station, tv_next_station_dist,
+            tv_next_station_exp_time, tv_next_ampm, tv_next_station, tv_next_station_dist,
             tv_final_dest_data, tv_pending_distance;//, tv_final_exp_time;
 
     private Handler handler;
-    private StatusPref statusPref;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,13 +47,19 @@ public class HomeFragment extends Fragment implements LocationService.LocationLi
     @Override
     public void onResume() {
         super.onResume();
-        if (getActivity() != null) {
-            statusPref = new StatusPref(getActivity());
-            statusPref.registerListener(this);
-            StatusModel model = statusPref.getStatus();
-            updateUI(model);
-        }
+        restoreSharedPref();
+//        if (getActivity() != null) {
+//            statusPref = new StatusPref(getActivity());
+//            statusPref.registerListener(this);
+//            StatusModel model = statusPref.getStatus();
+//            updateUI(model);
+//        }
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        backUpToSharedPref();
     }
 
     //TODO : update the whole UI with available data
@@ -111,7 +118,7 @@ public class HomeFragment extends Fragment implements LocationService.LocationLi
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPrefChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case StatusPref.PREF_STATUS_DELAY:
                 tv_delay.setText(sharedPreferences.getString(key, tv_delay.getText().toString()));
@@ -142,6 +149,7 @@ public class HomeFragment extends Fragment implements LocationService.LocationLi
         tv_delay = view.findViewById(R.id.tv_late_data);
         tv_lat_lon = view.findViewById(R.id.tv_lat_lon_data);
         tv_next_station_exp_time = view.findViewById(R.id.tv_exp_time_data);
+        tv_next_ampm = view.findViewById(R.id.tv_next_ampm);
         tv_next_station = view.findViewById(R.id.tv_next_station_data);
         tv_next_station_dist = view.findViewById(R.id.tv_dist_data);
         tv_final_dest_data = view.findViewById(R.id.tv_final_dest_data);
@@ -159,6 +167,43 @@ public class HomeFragment extends Fragment implements LocationService.LocationLi
             ampm = "PM";
         }
         return hr + ":" + temp[1] + ampm;
+    }
+
+    private String[] convertTimeTo12Arr(String arrivalTime) {
+        String ampm = "AM";
+        String[] temp = arrivalTime.split(":");
+        int hr = Integer.parseInt(temp[0]);
+        if (hr > 12) {
+            hr = hr - 12;
+            ampm = "PM";
+        }
+        return new String[]{hr + ":" + temp[1], ampm};
+    }
+
+    private String convertTimeTo24(String t) {
+        String ampm = t.substring(t.length()-2, t.length()-1);
+        if (ampm.equalsIgnoreCase("AM")) {
+            return t.substring(0, t.length()-2);
+        }else {
+            String tempTime = t.substring(0, t.length()-2);
+            String tt[] = tempTime.split(":");
+            int hr = Integer.parseInt(tt[0]);
+            return (hr+12)+":"+tt[1];
+        }
+    }
+
+    private long formatLateToMinute(String d) {
+        int h = Integer.parseInt(d.split(":")[0]);
+        int m = Integer.parseInt(d.split(":")[1]);
+        if (h == 0) {
+            return m;
+        } else {
+            return (h*60)+m;
+        }
+    }
+
+    private String formatLate(long d) {
+        return d/60+":"+d%60;
     }
 
     //refresh the ui
@@ -189,6 +234,65 @@ public class HomeFragment extends Fragment implements LocationService.LocationLi
             tv_pending_distance.setText(dest.getDistanceCovered() + " KM, " + convertTime(dest.getArrivalTime()));
         }
     }
+
+    private void restoreSharedPref() {
+        StatusModel sm = new StatusPref(getActivity()).getStatus();
+
+       if (sm.getCurrent_city() != null) tv_current_city.setText(sm.getCurrent_city());
+        if (sm.getCurrent_lat() != null && sm.getCurrent_lng()!= null) tv_lat_lon.setText(sm.getCurrent_lat()+"::"+sm.getCurrent_lng());
+        if (sm.getDelay() != -1) tv_delay.setText(formatLate(sm.getDelay()));
+
+        if (sm.getNext_station() != null) tv_next_station.setText(sm.getNext_station());
+        if (sm.getNext_exp_time() != null){
+            String[] tt = convertTimeTo12Arr(sm.getNext_exp_time());
+            tv_next_station_exp_time.setText(tt[0]);
+            tv_next_ampm.setText(tt[1]);
+        }
+        if (sm.getNext_dist_pending() != null) tv_next_station_dist.setText(sm.getNext_dist_pending());
+
+        if (sm.getDest_station() != null) tv_final_dest_data.setText(sm.getDest_station());
+        //if (sm.getDest_dist_pending() != null )tv_pending_distance.setText(sm.getDest_dist_pending()+", "+convertTime(sm.getDest_exp_time()));
+        if (sm.getDest_dist_pending() != null && sm.getDest_exp_time() != null) tv_pending_distance.setText(sm.getDest_dist_pending()+", "+convertTime(sm.getDest_exp_time()));
+    }
+
+    private void backUpToSharedPref() {
+        String location = tv_current_city.getText().toString();
+        String late = tv_delay.getText().toString();
+        String latlng = tv_lat_lon.getText().toString();
+        String nxt_time = tv_next_station_exp_time.getText().toString();
+        String nxt_ampm = tv_next_ampm.getText().toString();
+        String nxt_st = tv_next_station.getText().toString();
+        String nxt_dist = tv_next_station_dist.getText().toString();
+        String final_st = tv_final_dest_data.getText().toString();
+
+        if (nxt_ampm.equalsIgnoreCase("PM")) {
+            nxt_time = convertTimeTo24(nxt_time+"PM");
+        }
+
+
+        String final_details = tv_pending_distance.getText().toString();
+        String temp[] = final_details.split(",");
+
+        String final_dist = temp[0];
+        String final_time = convertTimeTo24(temp[1].trim());
+        String[] ll = latlng.split("::");
+        new StatusPref(getActivity()).saveStatus(new StatusModel(
+                location,
+                ll.length==2?ll[0]:"LATITUDE",
+                ll.length==2?ll[1]:"LONGITUDE",
+                nxt_st,
+                nxt_time,
+                nxt_dist,
+                final_st,
+                final_time,
+                final_dist,
+                formatLateToMinute(late)
+
+        ));
+
+    }
+
+
 
 
 

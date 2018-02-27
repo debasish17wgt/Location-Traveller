@@ -9,9 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -28,8 +27,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.wgt.locationtraveller.adapter.PagerAdapter;
@@ -38,28 +35,30 @@ import com.wgt.locationtraveller.R;
 import com.wgt.locationtraveller.fragment.HomeFragment;
 import com.wgt.locationtraveller.fragment.MessageFragment;
 import com.wgt.locationtraveller.fragment.SettingsFragment;
+import com.wgt.locationtraveller.preference.StatusPref;
 import com.wgt.locationtraveller.services.LocationService;
 import com.wgt.locationtraveller.utils.Constant;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements LocationService.LocationListener {
+public class MainActivity extends AppCompatActivity
+        implements LocationService.LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private int stopCount = 0;
     private Handler handler;
 
     private LocationService locationService;
     private boolean locServiceStatus;
-    private LocationService.LocationListener listener_fragment;
+    //private LocationService.LocationListener listener_fragment;
 
     private List<String> listOfPermissions;
     private final int PERMISSION_REQUEST_CODE = 1;
 
     private List<Fragment> fragList;
-    private LocationService.LocationListener listener;
+    private LocationService.LocationListener locationListener;
+    private StatusPref.SharedPrefChangedListener prefChangedListener;
+    private StatusPref statusPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         setContentView(R.layout.activity_main);
 
         handler = new Handler();
+
+        statusPref = new StatusPref(this);
 
         getSupportActionBar().setTitle("KHARAGPUR, 100 KM, 02:26 PM");
         getSupportActionBar().hide();
@@ -91,8 +92,12 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         fragList.add(new MessageFragment());
         fragList.add(new SettingsFragment());
 
-        //set frag listener
-        listener = (LocationService.LocationListener)fragList.get(0);
+        //set frag locationListener
+        locationListener = (LocationService.LocationListener)fragList.get(0);
+
+        //set Home frag as sp Changed Listener
+        prefChangedListener = (StatusPref.SharedPrefChangedListener)fragList.get(0);
+
 
         //adapter
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), fragList);
@@ -146,9 +151,13 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     @Override
     protected void onResume() {
         super.onResume();
+
+        //set SharedPref Changed Listener
+        statusPref.registerListener(this);
+
         //check for permission and GPS status
         //start or bind service
-        // set location listener (after successfully binding)
+        // set location locationListener (after successfully binding)
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!checkUsesPermission()) {
@@ -187,8 +196,11 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
 
     @Override
     protected void onPause() {
+        //unregister SharedPrefChangedListsner
+        statusPref.unregisterListener(this);
+
         // unbind service if running
-        // set loc listener to null
+        // set loc locationListener to null
         if (isMyServiceRunning()) {
             unbindService(locationServiceConnection);
             if (locationService != null) {
@@ -201,8 +213,16 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     //location callback from service
     @Override
     public void onLocationReceived(Location location) {
-        if (listener != null) {
-            listener.onLocationReceived(location);
+        if (locationListener != null) {
+            locationListener.onLocationReceived(location);
+        }
+    }
+
+    //preference callback from SharedPreference
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (prefChangedListener != null) {
+            prefChangedListener.onSharedPrefChanged(sharedPreferences, key);
         }
     }
 
@@ -225,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
             locationService = ((LocationService.MyBinder) iBinder).getServiec();
             locServiceStatus = true;
 
-            //set location listener to the service to receive location update from service
+            //set location locationListener to the service to receive location update from service
             locationService.setLocationListener(MainActivity.this);
         }
 
@@ -320,6 +340,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
                 });
         dialog.show();
     }
+
 
 
 }

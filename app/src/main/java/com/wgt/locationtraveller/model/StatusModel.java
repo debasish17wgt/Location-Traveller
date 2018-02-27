@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class StatusModel {
-    private String current_lat, current_lng, next_station, next_exp_time, next_dist_pending, dest_station, dest_exp_time, dest_dist_pending;
+    private String current_city, current_lat, current_lng, next_station, next_exp_time, next_dist_pending, dest_station, dest_exp_time, dest_dist_pending;
     private long delay;
 
     public StatusModel() {
@@ -26,6 +26,30 @@ public class StatusModel {
         this.dest_exp_time = dest_exp_time;
         this.dest_dist_pending = dest_dist_pending;
         this.delay = delay;
+    }
+
+    public StatusModel(String current_city, String current_lat, String current_lng,
+                       String next_station, String next_exp_time, String next_dist_pending,
+                       String dest_station, String dest_exp_time, String dest_dist_pending,
+                       long delay) {
+        this.current_city = current_city;
+        this.current_lat = current_lat;
+        this.current_lng = current_lng;
+        this.next_station = next_station;
+        this.next_exp_time = next_exp_time;
+        this.next_dist_pending = next_dist_pending;
+        this.dest_station = dest_station;
+        this.dest_exp_time = dest_exp_time;
+        this.dest_dist_pending = dest_dist_pending;
+        this.delay = delay;
+    }
+
+    public String getCurrent_city() {
+        return current_city;
+    }
+
+    public void setCurrent_city(String current_city) {
+        this.current_city = current_city;
     }
 
     public String getCurrent_lat() {
