@@ -6,7 +6,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -26,10 +29,14 @@ import com.wgt.locationtraveller.R;
 import com.wgt.locationtraveller.activity.MainActivity;
 import com.wgt.locationtraveller.database.AppDatabase;
 import com.wgt.locationtraveller.model.LocationModel;
+import com.wgt.locationtraveller.networking.UploadLocations;
 import com.wgt.locationtraveller.utils.Constant;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 public class LocationService extends Service
         implements GoogleApiClient.ConnectionCallbacks,
@@ -42,8 +49,10 @@ public class LocationService extends Service
     private GoogleApiClient gac;
     private LocationRequest locationRequest;
 
-    private final long UPDATE_INTERVAL = 1000*60*2;
-    private final long FASTEST_INTERVAL = 1000*60*2;
+    private AppDatabase database;
+
+    private final long UPDATE_INTERVAL = 1000 * 60 * 2; // 2 mins
+    private final long FASTEST_INTERVAL = 1000 * 60 * 2; // 2 mins
 
     @Override
     public void onCreate() {
@@ -58,6 +67,8 @@ public class LocationService extends Service
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+
+        database = AppDatabase.getDatabase(this);
 
     }
 
@@ -124,11 +135,12 @@ public class LocationService extends Service
             listener.onLocationReceived(location);
         }
 
-        //save location to database
-        saveToDatabase(location);
+        //save location to database after that upload the details
+        SaveToDB saveToDB = new SaveToDB(location);
+        saveToDB.execute();
     }
 
-    private void saveToDatabase(Location location) {
+    /*private void saveToDatabase(Location location) {
         AppDatabase database = AppDatabase.getDatabase(this);
         String dateTime = getDateAndTime();
 
@@ -141,14 +153,14 @@ public class LocationService extends Service
                                 location.getLongitude()
                         )
                 );
-        Log.d("Location : ", "LONG : "+n);
-    }
+        Log.d("Location : ", "LONG : " + n);
+    }*/
 
     private String getDateAndTime() {
         Calendar c = Calendar.getInstance();
-        System.out.println("Current time =&gt; "+c.getTime());
+        System.out.println("Current time =&gt; " + c.getTime());
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String formattedDate = df.format(c.getTime());
         return formattedDate;
     }
@@ -204,7 +216,53 @@ public class LocationService extends Service
     public interface LocationListener {
         void onLocationReceived(Location location);
     }
+
     public void setLocationListener(LocationListener listener) {
         this.listener = listener;
+    }
+
+    //asyncTask to get address from location and save it to database
+    private class SaveToDB extends AsyncTask<Void, Void, Address> {
+        Location location;
+
+        public SaveToDB(@NonNull Location location) {
+            this.location = location;
+        }
+
+        @Override
+        protected void onPostExecute(Address address) {
+            if (address == null) {
+                return;
+            }
+
+            String dateTime = getDateAndTime();
+            long n = database.locationDao()
+                    .addLocation(
+                            new LocationModel(
+                                    dateTime.split(" ")[0],
+                                    dateTime.split(" ")[1],
+                                    location.getLatitude(),
+                                    location.getLongitude(),
+                                    address.getAddressLine(0),
+                                    false
+                            )
+                    );
+
+            //network call to upload new data
+            UploadLocations uploadLocations = new UploadLocations(LocationService.this);
+            uploadLocations.sync();
+        }
+
+        @Override
+        protected Address doInBackground(Void... voids) {
+            Address address = null;
+            Geocoder geocoder = new Geocoder(LocationService.this, Locale.getDefault());
+            try {
+                address = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).get(0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return address;
+        }
     }
 }

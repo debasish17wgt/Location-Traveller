@@ -24,11 +24,33 @@ public class LocationModel {
     @NonNull
     private double longitude;
 
-    public LocationModel(String date, String time, double latitude, double longitude) {
+    private String address;
+
+    private boolean isSynced;
+
+    public LocationModel(String date, String time, double latitude, double longitude, String address, boolean isSynced) {
         this.date = date;
         this.time = time;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.address = address;
+        this.isSynced = isSynced;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public boolean getSynced() {
+        return isSynced;
+    }
+
+    public void setSynced(boolean synced) {
+        isSynced = synced;
     }
 
     public void setId(int id) {

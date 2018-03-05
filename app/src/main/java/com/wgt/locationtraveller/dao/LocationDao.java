@@ -20,6 +20,12 @@ public interface LocationDao {
     @Query("SELECT * FROM LocationModel")
     List<LocationModel> getAllLocations();
 
+    @Query("SELECT * FROM LocationModel WHERE isSynced = 0")
+    List<LocationModel> getAllLocationsForUpload();
+
+    @Query("UPDATE LocationModel SET isSynced = 1 WHERE id = :ids")
+    void updateIDsToSynced(List<Integer> ids);
+
     /*@Query("SELECT * FROM LocationModel WHERE email = :email")
     List<LocationModel> getAllLocationsByEmail(String email);*/
 }

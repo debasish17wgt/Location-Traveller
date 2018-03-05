@@ -300,7 +300,7 @@ public class AddTrainDialogUtil implements TextWatcher, Response.ErrorListener, 
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(context, "ERROR : failed to handle response", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "ERROR : Data parsing error\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
         } catch (NumberFormatException e) {
             Toast.makeText(context, "ERROR : Data parsing error\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }

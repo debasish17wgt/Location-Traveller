@@ -25,5 +25,7 @@ public class Constant {
 
     public interface URL {
         String train_info = "https://kaiserwgt.000webhostapp.com/webservices/getRouteInfo.php";
+        String upload_single_location = "https://kaiserwgt.000webhostapp.com/webservices/addLocation.php";
+        String upload_list_location = "https://kaiserwgt.000webhostapp.com/webservices/addLocations.php";
     }
 }
