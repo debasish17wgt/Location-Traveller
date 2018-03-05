@@ -256,6 +256,7 @@ public class HomeFragment extends Fragment implements LocationService.LocationLi
     }
 
     private void backUpToSharedPref() {
+
         String location = tv_current_city.getText().toString();
         String late = tv_delay.getText().toString();
         String latlng = tv_lat_lon.getText().toString();

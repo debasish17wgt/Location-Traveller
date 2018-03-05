@@ -27,6 +27,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.wgt.locationtraveller.adapter.PagerAdapter;
@@ -338,7 +341,26 @@ public class MainActivity extends AppCompatActivity
                         Toast.makeText(MainActivity.this, "Enable location service", Toast.LENGTH_SHORT).show();
                     }
                 });
-        dialog.show();
+        AlertDialog d = dialog.create();
+        d.show();
+
+        LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        ll.setMargins(10, 0, 10, 0);
+
+
+        Button pb = d.getButton(DialogInterface.BUTTON_POSITIVE);
+        pb.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        pb.setLayoutParams(ll);
+        pb.setTextColor(getResources().getColor(android.R.color.white));
+        pb.setPadding(10, 0, 10, 0);
+
+        Button nb = d.getButton(DialogInterface.BUTTON_NEGATIVE);
+        //nb.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        nb.setLayoutParams(ll);
+        nb.setTextColor(getResources().getColor(android.R.color.darker_gray));
+        nb.setPadding(10, 0, 10, 0);
+
+
     }
 
 

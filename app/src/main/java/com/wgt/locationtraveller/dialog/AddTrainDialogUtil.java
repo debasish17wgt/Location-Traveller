@@ -286,13 +286,13 @@ public class AddTrainDialogUtil implements TextWatcher, Response.ErrorListener, 
                 routeModels.add(
                         new RouteModel(
                                 trainNo,
-                                obj.getString("stationName"),
-                                obj.getString("arrival"),
-                                obj.getString("distTravelled"),
-                                obj.getString("stationPincode").equals("") ? 0 : Integer.parseInt(obj.getString("stationPincode")),
-                                obj.getString("stationLatitude").equals("") ? 0 : Double.parseDouble(obj.getString("stationLatitude")),
-                                obj.getString("stationLongitude").equals("") ? 0 : Double.parseDouble(obj.getString("stationLongitude")),
-                                obj.getString("stationRadius").equals("") ? 0 : Integer.parseInt(obj.getString("stationRadius"))
+                                obj.getString("stationName").trim(),
+                                obj.getString("arrival").trim(),
+                                obj.getString("distTravelled").trim(),
+                                obj.getString("stationPincode").trim().equals("") ? 0 : Integer.parseInt(obj.getString("stationPincode").trim()),
+                                obj.getString("stationLatitude").trim().equals("") ? 0 : Double.parseDouble(obj.getString("stationLatitude").trim()),
+                                obj.getString("stationLongitude").trim().equals("") ? 0 : Double.parseDouble(obj.getString("stationLongitude").trim()),
+                                obj.getString("stationRadius").trim().equals("") ? 0 : Integer.parseInt(obj.getString("stationRadius").trim())
                         )
                 );
             }

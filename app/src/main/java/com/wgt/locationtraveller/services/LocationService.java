@@ -42,8 +42,8 @@ public class LocationService extends Service
     private GoogleApiClient gac;
     private LocationRequest locationRequest;
 
-    private final long UPDATE_INTERVAL = 2000;//1000*60*2;
-    private final long FASTEST_INTERVAL = 2000;//1000*60*2;
+    private final long UPDATE_INTERVAL = 1000*60*2;
+    private final long FASTEST_INTERVAL = 1000*60*2;
 
     @Override
     public void onCreate() {
