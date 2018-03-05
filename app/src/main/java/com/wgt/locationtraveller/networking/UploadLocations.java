@@ -97,6 +97,7 @@ public class UploadLocations {
     }
 
     private void handleResponse(String response) {
+        List<Integer> IDs = new ArrayList<>();
         try {
             JSONObject resObj = new JSONObject(response);
             String status = resObj.getString("success");
@@ -107,7 +108,7 @@ public class UploadLocations {
                 String data = message.substring(1, message.length() - 1);
                 String idS[] = data.split(",");
 
-                List<Integer> IDs = new ArrayList<>();
+
                 for (int i=0; i<idS.length;i++) {
                     try{
                         IDs.add(Integer.parseInt(idS[i]));
@@ -115,11 +116,10 @@ public class UploadLocations {
                         e.printStackTrace();
                     }
                 }
-
-                database.locationDao().updateIDsToSynced(IDs);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        database.locationDao().updateIDsToSynced(IDs);
     }
 }
